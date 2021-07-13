@@ -1,12 +1,15 @@
 const wordService = require("../services/WordService");
-const Word = require("../models/Word");
+const slug = require("slug");
 
+slug.charmap["-"] = "-";
+
+// /words
 class WordController {
-  // [Get] /words/:name
+  // [Get]
   async getByName(req, res, next) {
     const { name } = req.params;
 
-    const word = await wordService.getByName(name);
+    const word = await wordService.getByName(slug(name, "_"));
 
     if (!word) {
       res.status(400).json({ status: "400", error: "Không tìm thấy" });

@@ -3,32 +3,31 @@ const request = require("request-promise");
 const axios = require("axios");
 const Word = require("./../models/Word");
 
+const replaceAll = (str, oldChar, newChar) => {
+  let result = "";
+
+  for (let i = 0; i < str.length; i++) {
+    let tempt = str[i];
+
+    if (tempt === oldChar) {
+      tempt = newChar;
+    }
+
+    result += tempt;
+  }
+
+  return result;
+};
+
 class WordService {
   async getByName(name) {
     const rs = await Word.findOne({ name }).select("-__v");
-
     if (rs) return rs;
 
     // nếu không có từ thì crawl
-    const result = {
+    let result = {
       name,
     };
-
-    // get usSound
-    const usFetchResult = await axios.get(
-      `https://dict.laban.vn/ajax/getsound?accent=us&word=${name}`
-    );
-
-    const { data } = usFetchResult.data;
-
-    if (data) result.usSound = data;
-    else return null;
-
-    // get ukSound
-    const ukFetchResult = await axios.get(
-      `https://dict.laban.vn/ajax/getsound?accent=uk&word=${name}`
-    );
-    result.ukSound = ukFetchResult.data.data;
 
     await request(
       `http://tratu.soha.vn/dict/en_vn/${name}`,
@@ -36,9 +35,15 @@ class WordService {
         const $ = cheerio.load(html);
         const bodyContentEl = $("#bodyContent");
 
-        const pronounce = bodyContentEl.find(".section-h5").find("b").text();
-        if (!pronounce) return;
+        // nếu không tồn tại từ này
 
+        if (bodyContentEl.text().indexOf("Trang này hiện chưa có") !== -1) {
+          result = null;
+
+          return;
+        }
+
+        const pronounce = bodyContentEl.find(".section-h5").find("b").text();
         result.pronounce = pronounce;
 
         const contentEls = bodyContentEl.find(".section-h2");
@@ -55,6 +60,28 @@ class WordService {
         });
       }
     );
+
+    if (!result) return null;
+
+    // get usSound
+    const nameTempt = replaceAll(name, "_", "+");
+    const usFetchResult = await axios.get(
+      `https://dict.laban.vn/ajax/getsound?accent=us&word=${nameTempt}`
+    );
+
+    const { data } = usFetchResult.data;
+
+    if (data) {
+      result.usSound = data;
+
+      const ukFetchResult = await axios.get(
+        `https://dict.laban.vn/ajax/getsound?accent=uk&word=${nameTempt}`
+      );
+      result.ukSound = ukFetchResult.data.data;
+    } else {
+      result.usSound = "";
+      result.ukSound = "";
+    }
 
     const wordRs = new Word({ ...result });
     wordRs.save();
@@ -131,6 +158,8 @@ class WordService {
 
     return result;
   }
+
+  async crawlWord(url, type) {}
 }
 
 module.exports = new WordService();
