@@ -12,4 +12,10 @@ Clone project về và chạy 2 câu lệnh sau, project chạy trên [http://lo
 
 ### Word
 
-- `/words/:name`: lấy thông tin từ vựng
+- `/words/:name`: lấy thông tin từ vựng.
+
+### Course
+- `/courses`: lấy thông tin khóa học.
+  - params: 
+    - topicId: int (Id topic trong database).
+    - url: String (VD: https://ejoy-english.com/go/wordstoreDetail/505-phrase-list/42e).
