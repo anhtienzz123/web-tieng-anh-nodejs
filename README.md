@@ -12,4 +12,4 @@ Clone project về và chạy 2 câu lệnh sau, project chạy trên [http://lo
 
 ### Word
 
-- `/words/:name`: lấy thông tin từ vựng
+- `[GET] /words/:name`: lấy thông tin từ vựng
