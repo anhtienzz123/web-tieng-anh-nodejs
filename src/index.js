@@ -5,7 +5,11 @@ require("dotenv").config();
 
 const cors = require("cors");
 
-var whitelist = ["http://localhost:3000", "http://localhost:8080"]; //white list consumers
+var whitelist = [
+  "http://localhost:3000",
+  "http://localhost:8080",
+  "https://ejoy-english.com",
+]; //white list consumers
 var corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
