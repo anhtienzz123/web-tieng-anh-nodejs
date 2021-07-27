@@ -24,4 +24,9 @@ Clone project về và chạy 2 câu lệnh sau, project chạy trên [http://lo
 ## Exam
 
 - `[GET] /exams`: crawl bài thi toeic.
-  - params: bookId: int, examId: int, name: String, bookIdDatabase: String, cookie: String
+  - params: bookId: int, examId: int, name: String, bookIdDatabase: String, cookie: String.
+
+## Video
+
+- `[GET] /video/crawl`: crawl video.
+  - params: categoryId: int, url: String.
