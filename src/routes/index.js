@@ -5,11 +5,11 @@ const videoRouter = require("./video");
 const blogRouter = require("./blog");
 
 const route = (app) => {
-  app.use("/words", wordRouter);
-  app.use("/courses", courseRouter);
-  app.use("/exams", examRouter);
-  app.use("/videos", videoRouter);
-  app.use("/blogs", blogRouter);
+    app.use("/words", wordRouter);
+    app.use("/courses", courseRouter);
+    app.use("/exams", examRouter);
+    app.use("/videos", videoRouter);
+    app.use("/blogs", blogRouter);
 };
 
 module.exports = route;
